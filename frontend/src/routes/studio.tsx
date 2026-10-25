@@ -2,6 +2,7 @@ import {
   AiMagicIcon,
   AppleIcon,
   CommandLineIcon,
+  Configuration01Icon,
   GeometricShapes02Icon,
   GithubIcon,
   WindowsNewIcon,
@@ -125,6 +126,9 @@ const primaryButtonClass =
 const secondaryButtonClass =
   'inline-flex min-h-12 items-center justify-center rounded-full border border-black/14 bg-white/78 px-8 py-3.5 text-base font-medium text-(--text) no-underline backdrop-blur-sm hover:border-black/22 hover:bg-white sm:min-h-14 sm:px-10 sm:py-4 sm:text-[1.0625rem]'
 
+const copyButtonClass =
+  'inline-flex min-h-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/14 bg-white/78 px-4 text-sm font-medium text-(--text) transition-colors hover:border-black/22 hover:bg-white'
+
 const textLinkClass =
   'font-medium text-(--text) underline decoration-black/15 underline-offset-4 transition-colors hover:text-black'
 
@@ -142,6 +146,22 @@ const mcpGuideHref =
   'https://github.com/striker561/Avnac-Studio/blob/studio/docs/MCP_GUIDE.md'
 
 const skillCommand = 'npx skills add striker561/Avnac-Studio --skill avnac-designer'
+
+const connectConfig = JSON.stringify(
+  {
+    mcpServers: {
+      'avnac-studio': {
+        url: 'http://127.0.0.1:12345/',
+        headers: { Authorization: 'Bearer <token from Avnac Settings>' },
+      },
+    },
+  },
+  null,
+  2,
+)
+
+const claudeConnectCommand =
+  'claude mcp add --transport http avnac-studio http://127.0.0.1:12345/ --header "Authorization: Bearer <token from Avnac Settings>"'
 
 const striker561TwitterHref = 'https://twitter.com/insigdev'
 const d3uceyTwitterHref = 'https://twitter.com/d3uc3y'
@@ -258,7 +278,7 @@ function StudioPage() {
   const stickerLayerRef = useRef<HTMLDivElement | null>(null)
   const dragStateRef = useRef<DragState | null>(null)
   const compact = useCompactLayout()
-  const [skillCommandCopied, setSkillCommandCopied] = useState(false)
+  const [copiedKey, setCopiedKey] = useState<string | null>(null)
 
   const updateStickerPosition = useCallback(
     (stickerId: string, clientX: number, clientY: number) => {
@@ -314,13 +334,13 @@ function StudioPage() {
     setActiveStickerId(null)
   }
 
-  const copySkillCommand = useCallback(() => {
+  const copyText = useCallback((key: string, text: string) => {
     if (!navigator.clipboard?.writeText) return
     navigator.clipboard
-      .writeText(skillCommand)
+      .writeText(text)
       .then(() => {
-        setSkillCommandCopied(true)
-        window.setTimeout(() => setSkillCommandCopied(false), 2000)
+        setCopiedKey(key)
+        window.setTimeout(() => setCopiedKey(null), 2000)
       })
       .catch(() => {})
   }, [])
@@ -824,10 +844,10 @@ function StudioPage() {
                   </span>
                   <button
                     type="button"
-                    onClick={copySkillCommand}
-                    className="inline-flex min-h-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-black/14 bg-white/78 px-4 text-sm font-medium text-(--text) transition-colors hover:border-black/22 hover:bg-white"
+                    onClick={() => copyText('skill', skillCommand)}
+                    className={copyButtonClass}
                   >
-                    {skillCommandCopied ? 'Copied' : 'Copy command'}
+                    {copiedKey === 'skill' ? 'Copied' : 'Copy command'}
                   </button>
                 </div>
               </article>
@@ -870,6 +890,69 @@ function StudioPage() {
                 </p>
               </article>
             </div>
+
+            <article className="landing-ai-card mt-4 min-w-0! rounded-[1.6rem] border border-black/8 bg-white/80 p-5 shadow-[0_18px_50px_rgba(15,23,42,0.05)] backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <span className="inline-flex size-10 items-center justify-center rounded-2xl bg-black/5 text-(--text)">
+                  <HugeiconsIcon icon={Configuration01Icon} size={18} strokeWidth={1.75} />
+                </span>
+                <div className="landing-kicker">Connect your agent</div>
+              </div>
+              <p className="mt-4 max-w-3xl text-sm leading-6 text-(--text-muted)">
+                The skill teaches the agent how to design — the MCP server is how it reaches the
+                canvas. Turn it on in Avnac Studio → Settings → MCP server, then point your
+                client at the URL and bearer token shown there.
+              </p>
+              <div className="mt-6 grid gap-4 lg:grid-cols-2">
+                <div className="min-w-0!">
+                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-subtle)">
+                    Cursor / VS Code — .cursor/mcp.json
+                  </div>
+                  <pre className="min-w-0! overflow-x-auto rounded-[1.2rem] bg-[#111111] px-4 py-4 text-sm leading-7 text-white">
+                    <code className="block whitespace-pre-wrap">{connectConfig}</code>
+                  </pre>
+                  <div className="mt-3 flex items-center justify-end">
+                    <button
+                      type="button"
+                      onClick={() => copyText('connect', connectConfig)}
+                      className={copyButtonClass}
+                    >
+                      {copiedKey === 'connect' ? 'Copied' : 'Copy config'}
+                    </button>
+                  </div>
+                </div>
+                <div className="min-w-0!">
+                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-subtle)">
+                    Claude Code — terminal
+                  </div>
+                  <pre className="min-w-0! overflow-x-auto rounded-[1.2rem] bg-[#111111] px-4 py-4 text-sm leading-7 text-white">
+                    <code className="block whitespace-pre-wrap">{claudeConnectCommand}</code>
+                  </pre>
+                  <div className="mt-3 flex items-center justify-end">
+                    <button
+                      type="button"
+                      onClick={() => copyText('claude', claudeConnectCommand)}
+                      className={copyButtonClass}
+                    >
+                      {copiedKey === 'claude' ? 'Copied' : 'Copy command'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <p className="mt-4 text-sm leading-6 text-(--text-muted)">
+                Both snippets use the default port — if Settings shows a different one, use that
+                URL instead. More clients (MCPJam, Windsurf, Antigravity):{' '}
+                <a
+                  href={mcpGuideHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={textLinkClass}
+                >
+                  the MCP guide
+                </a>
+                .
+              </p>
+            </article>
           </div>
         </div>
       </section>
