@@ -141,7 +141,7 @@ const studioBranchHref = 'https://github.com/striker561/Avnac-Studio/tree/studio
 const mcpGuideHref =
   'https://github.com/striker561/Avnac-Studio/blob/studio/docs/MCP_GUIDE.md'
 
-const skillCommand = 'npx skills add striker561/Avnac-Studio'
+const skillCommand = 'npx skills add striker561/Avnac-Studio --skill avnac-designer'
 
 const striker561TwitterHref = 'https://twitter.com/insigdev'
 const d3uceyTwitterHref = 'https://twitter.com/d3uc3y'
