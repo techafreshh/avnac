@@ -164,7 +164,7 @@ const claudeConnectCommand =
   'claude mcp add --transport http avnac-studio http://127.0.0.1:12345/ --header "Authorization: Bearer <token from Avnac Settings>"'
 
 const opencodeConnectCommand =
-  "opencode mcp add avnac-studio --url http://127.0.0.1:12345/ --header 'Authorization: Bearer <token from Avnac Settings>'"
+  "opencode mcp add avnac-studio --url http://127.0.0.1:12345/ --header 'Authorization=Bearer <token from Avnac Settings>'"
 
 const codexConnectConfig = `[mcp_servers.avnac-studio]
 url = "http://127.0.0.1:12345/"
