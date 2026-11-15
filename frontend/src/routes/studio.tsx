@@ -163,6 +163,15 @@ const connectConfig = JSON.stringify(
 const claudeConnectCommand =
   'claude mcp add --transport http avnac-studio http://127.0.0.1:12345/ --header "Authorization: Bearer <token from Avnac Settings>"'
 
+const opencodeConnectCommand =
+  "opencode mcp add avnac-studio --url http://127.0.0.1:12345/ --header 'Authorization: Bearer <token from Avnac Settings>'"
+
+const codexConnectConfig = `[mcp_servers.avnac-studio]
+url = "http://127.0.0.1:12345/"
+
+[mcp_servers.avnac-studio.http_headers]
+"Authorization" = "Bearer <token from Avnac Settings>"`
+
 const striker561TwitterHref = 'https://twitter.com/insigdev'
 const d3uceyTwitterHref = 'https://twitter.com/d3uc3y'
 
@@ -818,8 +827,8 @@ function StudioPage() {
               </h2>
               <p className="landing-section-copy">
                 Studio ships a built-in MCP server, so coding agents like Cursor, Claude Code,
-                and Codex can drive the canvas in plain language — composing shapes and text,
-                pulling in photos, and screenshotting their own work to check it.
+                Codex, and OpenCode can drive the canvas in plain language — composing shapes and
+                text, pulling in photos, and screenshotting their own work to check it.
               </p>
             </div>
 
@@ -938,9 +947,43 @@ function StudioPage() {
                     </button>
                   </div>
                 </div>
+                <div className="min-w-0!">
+                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-subtle)">
+                    OpenCode — terminal
+                  </div>
+                  <pre className="min-w-0! overflow-x-auto rounded-[1.2rem] bg-[#111111] px-4 py-4 text-sm leading-7 text-white">
+                    <code className="block whitespace-pre-wrap">{opencodeConnectCommand}</code>
+                  </pre>
+                  <div className="mt-3 flex items-center justify-end">
+                    <button
+                      type="button"
+                      onClick={() => copyText('opencode', opencodeConnectCommand)}
+                      className={copyButtonClass}
+                    >
+                      {copiedKey === 'opencode' ? 'Copied' : 'Copy command'}
+                    </button>
+                  </div>
+                </div>
+                <div className="min-w-0!">
+                  <div className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-(--text-subtle)">
+                    Codex — ~/.codex/config.toml
+                  </div>
+                  <pre className="min-w-0! overflow-x-auto rounded-[1.2rem] bg-[#111111] px-4 py-4 text-sm leading-7 text-white">
+                    <code className="block whitespace-pre-wrap">{codexConnectConfig}</code>
+                  </pre>
+                  <div className="mt-3 flex items-center justify-end">
+                    <button
+                      type="button"
+                      onClick={() => copyText('codex', codexConnectConfig)}
+                      className={copyButtonClass}
+                    >
+                      {copiedKey === 'codex' ? 'Copied' : 'Copy config'}
+                    </button>
+                  </div>
+                </div>
               </div>
               <p className="mt-4 text-sm leading-6 text-(--text-muted)">
-                Both snippets use the default port — if Settings shows a different one, use that
+                Each snippet uses the default port — if Settings shows a different one, use that
                 URL instead. More clients (MCPJam, Windsurf, Antigravity):{' '}
                 <a
                   href={mcpGuideHref}
